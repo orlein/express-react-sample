@@ -1,10 +1,16 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+
+const fetchState = async () => {
+  const res = await fetch("/api/hello");
+  return await res.json();
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+  const [hello, setHello] = useState<{ hello: string } | null>(null);
 
   return (
     <>
@@ -17,7 +23,17 @@ function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
+      {hello && <h2>{hello.hello}</h2>}
       <div className="card">
+        <button
+          onClick={() => {
+            fetchState().then((result) => {
+              setHello(result);
+            });
+          }}
+        >
+          Fetch Hello world from backend
+        </button>
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
         </button>
@@ -29,7 +45,7 @@ function App() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
